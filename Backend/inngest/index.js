@@ -79,7 +79,7 @@ const syncWorkspaceCreation = inngest.createFunction(
         name: data.name,
         slug: data.slug,
         ownerId: data.created_by,
-        image: data.image_url,
+        image_url: data.image_url,
       },
     });
 
@@ -110,7 +110,7 @@ const syncWorkspaceUpdation = inngest.createFunction(
       data: {
         name: data.name,
         slug: data.slug,
-        image: data.image_url,
+        image_url: data.image_url,
       },
     });
   }
@@ -138,7 +138,7 @@ const syncWorkspaceMemberCreation = inngest.createFunction(
   {
     id: "sync-workspace-member-from-clerk",
     triggers: [
-      { event: "clerk/organizationMembership.created" },
+      { event: "clerk/organizationInvitation.created" },
     ],
   },
   async ({ event }) => {
@@ -146,9 +146,9 @@ const syncWorkspaceMemberCreation = inngest.createFunction(
 
     await prisma.workspaceMember.create({
       data: {
-        userId: data.public_user_data.user_id,
+        userId: data.user_id,
         workspaceId: data.organization.id,
-        role: String(data.role).toUpperCase(),
+        role: String(data.role).includes("admin") ? "ADMIN" : "MEMBER",
       },
     });
   }
