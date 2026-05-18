@@ -1,36 +1,32 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { dummyWorkspaces } from "../assets/assets";
 import api from "../configs/api.js"
+import getToken from "../pages/Layout.jsx"
 
 
 export const fetchWorkspaces = createAsyncThunk(
-  "workspace/fetchWorkspaces",
-  async ({ getToken }, thunkAPI) => {
-    try {
+    'workspace/fetchWorkspaces',
+    async ({ getToken }) => {
+        try {
 
-      // GET CLERK TOKEN
-      const token = await getToken()
+            const token = await getToken()
 
-      // SEND TOKEN TO BACKEND
-      const response = await axios.get(
-        "http://localhost:5000/api/workspaces",
-        {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
+            const { data } = await api.get('/api/workspaces', {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            })
+
+            return data.workspaces || []
+
+        } catch (error) {
+
+            console.error(
+                error?.response?.data?.message || error.message
+            )
+
+            return []
         }
-      )
-
-      return response.data
-
-    } catch (error) {
-      console.log(error.response?.data)
-
-      return thunkAPI.rejectWithValue(
-        error.response?.data
-      )
     }
-  }
 )
 
 const initialState = {
