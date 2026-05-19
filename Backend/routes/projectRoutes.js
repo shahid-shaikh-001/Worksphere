@@ -6,7 +6,7 @@ import { addMember } from "../controller/workcontroller.js";
 const projectRouter = express.Router();
 
 projectRouter.post('/',createproject)
-projectRouter.put('/',updateProject)
+projectRouter.put('/:id',updateProject)
 projectRouter.put('/:projectId/addMember',addMember)
 
 
