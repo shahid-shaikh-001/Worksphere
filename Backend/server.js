@@ -14,18 +14,23 @@ const app = express();
 
 const allowedOrigins = [
   "http://localhost:5173",
-  "https://worksphere-sx6a.vercel.app",
+  "http://localhost:5174",
   "https://worksphere-dusky.vercel.app",
+  "https://worksphere-sx6a.vercel.app",
 ];
 
 app.use(
   cors({
-    origin: allowedOrigins,
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     credentials: true,
   })
 );
-
-app.options("*", cors());
 
 app.use(express.json());
 app.use(clerkMiddleware());
