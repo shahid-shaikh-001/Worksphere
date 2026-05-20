@@ -4,6 +4,7 @@ import { addMember, getUserWorkspaces , createWorkspace} from "../controller/wor
 const workspaceRouter = express.Router()
 
 workspaceRouter.get('/',getUserWorkspaces)
+workspaceRouter.post('/', createWorkspace)
 workspaceRouter.post('/add-member',addMember)
 
 export default workspaceRouter
